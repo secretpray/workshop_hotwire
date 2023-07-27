@@ -20,11 +20,10 @@
 
 <h2 class="mt-4 text-header-2">Popular</h2>
 <ul class="tracks mt-2">
-  <%= render tracks, enqueueble: true %>
-  <li class="track">
-    <span class="track--number"></span>
-    <a href="#" class="text-secondary hover:text-primary transition-colors">Load more</a>
-  </li>
+  <%= render 'popular', tracks:, 
+                        artist:,
+                        current_position: 0,
+                        tracks_size: @tracks_size %>
 </ul>
 
 <hr class="my-4"/>

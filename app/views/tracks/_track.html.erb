@@ -1,5 +1,5 @@
 <%# locals: (track:, track_counter: nil, track_iteration: nil, deletable: false, enqueueble: false) -%>
-<li class="track">
+<li class="track" transition-id="<%= track.id %>">
   <span class="track--number">
     <% if track.id == current_track&.id %>
       <span class="track--number--text track--playing-indicator"></span>

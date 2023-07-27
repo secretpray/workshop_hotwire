@@ -8,6 +8,8 @@ class Artist < ApplicationRecord
 
   normalizes :name, with: -> { _1.squish }
 
+  MAX_POPULAR_TRACKS = 5
+
   scope :tagged, ->(tag) {
     where("EXISTS (SELECT 1 FROM json_each(artists.tags) WHERE value = ?)", tag)
   }

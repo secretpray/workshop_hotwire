@@ -2,6 +2,10 @@
   view-transition-name: aside;
 }
 
+.down {
+  view-transition-name: down;
+}
+
 /* Use named view transitions for nav and player to put them onto separate pseudo-trees upper than aside and main */
 .nav {
   view-transition-name: nav;
@@ -34,6 +38,14 @@ html[transition="aside"]::view-transition-old(aside) {
 
 html[transition="aside"]::view-transition-new(aside) {
   animation: 300ms ease-out 100ms both full-slide-from-right, 300ms ease-in 0ms both fade-in;
+}
+
+html[transition="down"]::view-transition-old(down) {
+  animation: 500ms ease-in 0ms both full-slide-up, 500ms ease-out 50ms both fade-out;
+}
+
+html[transition="down"]::view-transition-new(down) {
+  animation: 300ms ease-out 100ms both full-slide-down, 300ms ease-in 0ms both fade-in;
 }
 
 @media (prefers-reduced-motion) {

@@ -31,12 +31,10 @@ document.addEventListener("turbo:before-render", (event) => {
 
 document.addEventListener("turbo:before-frame-render", (event) => {
   event.detail.render = (currentElement, newElement) => {
-    if (
-      currentElement.hasAttribute("transition-name") &&
-      newElement.hasAttribute("transition-name") &&
-      currentElement.firstElementChild?.getAttribute("transition-id") !==
-      newElement.firstElementChild?.getAttribute("transition-id")
-    ) {
+    const transitionNamePresent = currentElement.hasAttribute("transition-name") && newElement.hasAttribute("transition-name");
+    const differenceObjectId = currentElement.firstElementChild?.getAttribute("transition-id") !== newElement.firstElementChild?.getAttribute("transition-id");
+    const differenceItemsCount = currentElement.childElementCount !== newElement.childElementCount;
+    if (transitionNamePresent && (differenceObjectId || differenceItemsCount)) {
       document.documentElement.setAttribute(
         "transition",
         currentElement.getAttribute("transition-name")
@@ -47,7 +45,7 @@ document.addEventListener("turbo:before-frame-render", (event) => {
       childrenOnly: true,
     });
   };
-
+  
   if (document.startViewTransition) {
     event.preventDefault();
 
