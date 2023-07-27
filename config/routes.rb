@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   delete "sign_out", to: "sessions#destroy", as: :sign_out
 
   resources :artists, only: [:show] do
+    get :tracks, on: :member
     get :popular, on: :member, as: :popular_track
   end
 

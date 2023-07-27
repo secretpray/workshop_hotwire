@@ -1,4 +1,4 @@
-<%= turbo_frame_tag dom_id(artist, :popular), 'transition-name' => 'down'  do %>
+<%= turbo_frame_tag dom_id(artist, :popular), 'transition-name' => 'down' do %>
   <%= render tracks, enqueueble: true %>
   <li class="track">
     <span class="track--number"></span>

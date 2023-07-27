@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include Pagy::Backend
   include CurrentTrackHelper
   helper_method :current_user, :current_track, :current_album, :current_station
 

@@ -4,7 +4,7 @@
     <% if track.id == current_track&.id %>
       <span class="track--number--text track--playing-indicator"></span>
     <% else %>
-      <%= track_counter + 1 %>
+      <%= @pagy.present? ? track_counter.next + @pagy.offset : track_counter.next %>
     <% end %>
   </span>
   <% if current_user&.live_station&.live? %>

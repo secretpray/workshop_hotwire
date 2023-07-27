@@ -14,6 +14,13 @@ class ArtistsController < ApplicationController
     end
   end
 
+  def tracks
+    tracks = artist.tracks.popularity_ordered
+    @pagy, @tracks = pagy_countless(tracks)
+
+    render "scrollable_list"
+  end
+
   def popular
     tracks = artist.tracks.popularity_ordered
     tracks_size = tracks.size
@@ -28,7 +35,7 @@ class ArtistsController < ApplicationController
                                           tracks_size:,
                                           current_position:}
     else
-      render nothing: true # || head :ok
+      render nothing: true
     end
   end
 

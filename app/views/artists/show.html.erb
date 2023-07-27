@@ -18,7 +18,13 @@
 
 <hr class="my-4">
 
-<h2 class="mt-4 text-header-2">Popular</h2>
+<div class='flex mt-4 justify-between items-center'>
+  <h2 class="text-header-2">Popular</h2>
+  <%= link_to "See all", 
+              tracks_artist_path(artist), 
+              class: "icon-btn",
+              data: {turbo_frame: 'tracks-page-1'} %>
+</div>
 <ul class="tracks mt-2">
   <%= render 'popular', tracks:, 
                         artist:,
