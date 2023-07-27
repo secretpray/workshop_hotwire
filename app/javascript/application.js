@@ -9,7 +9,15 @@ document.addEventListener("turbo:before-render", (event) => {
   prevPath = window.location.pathname;
   event.detail.render = async (prevEl, newEl) => {
     await new Promise((resolve) => setTimeout(() => resolve(), 0));
-    morphdom(prevEl, newEl);
+    morphdom(prevEl, newEl, {
+      onBeforeElUpdated: function (_prevEl, newEl) {
+        if (newEl.hasAttribute('data-morpf-permanent')) {
+          return false;
+        }
+
+        return true;
+      }
+    });
   };
 
   if (document.startViewTransition) {
@@ -27,7 +35,7 @@ document.addEventListener("turbo:before-frame-render", (event) => {
       currentElement.hasAttribute("transition-name") &&
       newElement.hasAttribute("transition-name") &&
       currentElement.firstElementChild?.getAttribute("transition-id") !==
-        newElement.firstElementChild?.getAttribute("transition-id")
+      newElement.firstElementChild?.getAttribute("transition-id")
     ) {
       document.documentElement.setAttribute(
         "transition",
