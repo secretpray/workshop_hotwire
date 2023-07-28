@@ -51,12 +51,22 @@ export default class extends Controller {
     if (this.audio && this.playing) {
       this.play();
     }
+    // Store the event listener function in a variable for future removal
+    this.keyupListener = event => {
+      if (event.code === 'Space' || event.key == " " || event.keyCode == 32) {
+        this.toggle();
+      }
+    };
+
+    document.addEventListener('keyup', this.keyupListener);
   }
 
   disconnect() {
     if (this.audio) {
       this.audio.pause();
     }
+    // Remove the event listener when disconnecting
+    document.removeEventListener('keyup', this.keyupListener);
   }
 
   play() {
@@ -69,6 +79,15 @@ export default class extends Controller {
     this.element.classList.remove(this.playingClass);
     this.audio.pause();
     this.playing = false;
+  }
+
+  toggle() {
+    // this.element.classList.toggle(this.playingClass);
+    if (this.playing) {
+      this.pause();
+    } else {
+      this.play();
+    }
   }
 
   seek(e) {
