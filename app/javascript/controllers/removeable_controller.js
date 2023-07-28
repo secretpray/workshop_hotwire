@@ -2,19 +2,48 @@ import { Controller } from "@hotwired/stimulus";
 
 // Connects to data-controller="removeable"
 export default class extends Controller {
-  static values = { after: Number };
+  static values = {
+    showDelay: { type: Number, default: 200 },
+    removeDelay: { type: Number, default: 5000 },
+    dismissAfter: { type: Boolean, default: true }
+  }
+  static classes = [
+    "show", 
+    "hide"
+  ]
+
+  initialize() {
+    this.hide()
+  }
 
   connect() {
-    if (this.afterValue) {
-      this.removeTid = setTimeout(() => this.remove(), this.afterValue * 1000);
-    }
+    // Auto show (default hidden)
+    setTimeout(() => {
+      this.show();
+      // Auto dismiss if defined
+      if (this.dismissAfterValue) {
+        setTimeout(() => {
+          this.close();
+        }, this.removeDelayValue);
+      }
+    }, this.showDelayValue);
   }
 
-  disconnect() {
-    if (this.removeTid) clearTimeout(this.removeTid);
+  close() {
+    this.hide()
+
+    setTimeout(() => {
+      this.element.remove()
+    }, this.removeDelayValue)
   }
 
-  remove() {
-    this.element.remove();
+  show() {
+    this.element.classList.add(...this.showClasses)
+    this.element.classList.remove(...this.hideClasses)
+  }
+
+  hide() {
+    this.element.classList.add(...this.hideClasses)
+    this.element.classList.remove(...this.showClasses)
   }
 }

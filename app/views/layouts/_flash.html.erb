@@ -1,16 +1,28 @@
-<%# locals: () -%>
-<div class="fixed z-50 right-0 mr-4 top-0 mt-[80px]" id="flash">
-  <div class="flex justify-center">
-    <% if flash[:notice] %>
-      <div class="flash notice" role="alert" data-turbo-temporary data-controller="removeable" data-removeable-after-value="5">
-        <p class="text-small"><%= flash[:notice] %></p>
+<% flash.each do |type, message| %>
+  <div class="fixed inset-x-0 top-0 flex items-end justify-right px-4 py-5 sm:p-5 justify-end z-30 pointer-events-none">
+    <div
+        data-controller="removeable"
+        data-removeable-show-class="translate-x-0 opacity-75"
+        data-removeable-hide-class="translate-x-full opacity-0"
+        class="max-w-sm w-full shadow-lg px-4 py-2 rounded relative bg-white dark:bg-gray-600 border-l-8 border-pink-800 text-gray-600 pointer-events-auto transition translate-x-full transform ease-in-out duration-1000 opacity-0">
+      <div class="p-2">
+        <div class="flex items-start">
+          <div class="ml-3 w-0 flex-1">
+            <p class="text-sm leading-5 font-medium">
+              <%= content_tag :div, message, class: 'dark:text-gray-300' %>
+            </p>
+          </div>
+          <div class="ml-4 flex-shrink-0 flex">
+            <button data-action="removeable#close" 
+                    class="inline-flex dark:text-gray-300 text-gray-500 focus:outline-none dark:focus:text-gray-400 focus:text-gray-600 top-1" 
+                    style='margin-top: 4px;'>
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
-    <% end %>
-
-    <% if flash[:alert] %>
-      <div class="flash alert" role="alert" data-turbo-temporary data-controller="removeable" data-removeable-after-value="5">
-        <p class="text-small"><%= flash[:alert] %></p>
-      </div>
-    <% end %>
+    </div>
   </div>
-</div>
+<% end %>
