@@ -1,0 +1,12 @@
+<div class="flex w-full align-center my-0.5">
+  <%= link_to album_path(track.album), 
+              data: { action: 'click->search#clearAfter' } do %>
+    <%= track.title %> 
+    in 
+    <span class="text-blue-500">
+      <%= track.album.title %>
+    </span>
+  <% end %>
+</div>
+
+

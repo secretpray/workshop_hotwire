@@ -68,6 +68,20 @@
   @apply p-1 w-full rounded border border-gray-300 focus:outline-none;
 }
 
+.hoverWrapper #hoverContent {
+  display: none;
+  position: absolute;
+  width: 420px;
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.hoverWrapper:hover #hoverContent {
+  display: block;
+}
+
 html.debug * {
   animation: highlight 0.2s ease;
 }
