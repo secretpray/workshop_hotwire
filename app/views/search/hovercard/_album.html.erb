@@ -1,19 +1,20 @@
-<%= turbo_frame_tag dom_id(@artist, :hovercard), target: "_top" do %>
+<%= turbo_frame_tag dom_id(@album, :hovercard), target: "_top" do %>
   <div class='flex flex-row w-full'>
     <div class='flex flex-col w-1/3'>
       <div class='text-rose-600 font-semibold mb-2' style='width: 9rem;'>
-        <%= artist.name %>
+        <%= @album.title %>
       </div>
-      <% if artist.cover.attached? %>
-        <%= image_tag artist.cover, 
+      <% if @album.cover.attached? %>
+          <%= image_tag @album.cover,
                       size: '100',
                       style: "height: max-content; width: 9rem;" %>
       <% end %>
+      <%= link_to @album.artist.name, artist_path(@album.artist), class: "" %>
     </div>
     <div class='flex flex-col fs-[14px] ml-2 w-2/3'>
-      <% artist.albums.limit(10).pluck(:title, :year).each do |title, year| %>
+      <% @album.tracks.limit(10).pluck(:title, :duration).each do |title, duration| %>
         <div class=''>
-          <%= title %> (<%= year %>)
+          <%= title %> (<%= duration %>)
         </div>
       <% end %>
     </div>

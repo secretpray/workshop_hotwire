@@ -3,6 +3,14 @@
               class: "text-rose-600 font-semibold hoverWrapper", 
               data: { action: 'click->search#clearAfter' } do %>
     <%= artist.name %>
-    <%= render 'search/hovercard/artist', artist: %>
+    <div id="hoverContent" style='min-width: 420px !important;'>
+      <%= turbo_frame_tag dom_id(artist, :hovercard), 
+                          target: "_top", 
+                          role: "tooltip", 
+                          src: hovercard_artist_path(artist), 
+                          loading: :lazy do %>
+        Loading...
+      <% end %>
+    </div>    
   <% end %>    
 </div>

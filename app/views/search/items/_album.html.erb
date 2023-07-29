@@ -1,17 +1,35 @@
 <div class="flex w-full align-center my-0.5">
   <div class="flex-shrink-0 mr-2">
-   <%= link_to album.title, 
-               album_path(album), 
-               class: "text-blue-500",
-               data: { action: 'click->search#clearAfter' } %>
+    <%= link_to album_path(album), 
+               class: "text-blue-500 hoverWrapper",
+               data: { action: 'click->search#clearAfter' } do %>
+      <%= album.title %>
+      <div id="hoverContent" style='min-width: 420px !important;'>
+        <%= turbo_frame_tag dom_id(album, :hovercard), 
+                            target: "_top", 
+                            role: "tooltip", 
+                            src: hovercard_album_path(album), 
+                            loading: :lazy do %>
+          Loading...
+        <% end %>
+      </div>
+   <% end %>
   </div>
-  <div class="">
+  <div>
     <%= link_to artist_path(album.artist), 
                 class: "text-rose-600 font-semibold hoverWrapper",
                 data: { action: 'click->search#clearAfter' } do %>
     
       <%= album.artist.name %>
-      <%= render 'search/hovercard/artist', artist: album.artist %>
+      <div id="hoverContent" style='min-width: 420px !important;'>
+        <%= turbo_frame_tag dom_id(album.artist, :hovercard), 
+                            target: "_top", 
+                            role: "tooltip", 
+                            src: hovercard_artist_path(album.artist), 
+                            loading: :lazy do %>
+          Loading...
+        <% end %>
+      </div>
     <% end %>
   </div>
 </div>
