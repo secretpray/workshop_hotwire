@@ -11,9 +11,12 @@ Rails.application.routes.draw do
   end
 
   resource :live_station, only: [:show, :update, :edit, :new, :create] do
-    patch :start, on: :member
-    patch :stop, on: :member
-    post :play_next, on: :member
+    member do
+      patch :start # start broadcasting the live station
+      patch :stop # stop broadcasting the live station
+      post :play_next # play the next track in the live station queue
+      put ':id/play_control', to: 'live_stations#play_control', as: :play_control # play/pause the live station track
+    end
 
     resources :tracks, only: [:create, :destroy], module: :live_station do
       post :play, on: :member

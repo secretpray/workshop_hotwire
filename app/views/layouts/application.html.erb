@@ -2,6 +2,7 @@
   <%= render partial: "shared/nav" %>
 
   <div class="main">
+    <%= turbo_stream_from :live_stations %>
     <%= yield %>
   </div>
 

@@ -1,0 +1,8 @@
+<% unless live_stations.blank? %>
+  <h2 class="mt-4 text-header-2" data-live-stations='<%= live_stations %>' data-user-id='<%= user.id %>'>Live</h2>
+  <div class="albums-row">
+    <% live_stations.each do |live_station| %>
+      <%= render 'live_stations/live_station', live_station: %>
+    <% end %>
+  </div>
+<% end %>

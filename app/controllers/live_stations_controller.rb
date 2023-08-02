@@ -32,6 +32,7 @@ class LiveStationsController < ApplicationController
     station = current_user.live_station
 
     station.update!(live: true)
+    broadcast_update_live_stations
 
     render turbo_stream: [
       turbo_stream.update("player", partial: "player/player", locals: {station:, track: station.current_track, live: true}),
@@ -43,6 +44,7 @@ class LiveStationsController < ApplicationController
     station = current_user.live_station
 
     station.update!(live: false)
+    broadcast_update_live_stations
 
     Turbo::StreamsChannel.broadcast_update_to station, target: :player, content: ""
 
@@ -79,9 +81,31 @@ class LiveStationsController < ApplicationController
     render turbo_stream: turbo_stream.update("player", partial: "player/player", locals: {station:, track: station.current_track})
   end
 
+  def play_control
+    control_action = params[:control] == "play" ? :play : :pause
+    station = LiveStation.find(params[:id])
+
+    Turbo::StreamsChannel.broadcast_stream_to station, 
+      content: turbo_stream.set_attribute(".player", 
+        "data-player-control-action-value", control_action)
+  end
+
   private
 
   def station_params
     params.require(:live_station).permit(:name, :cover)
+  end
+
+  def broadcast_update_live_stations
+    live_stations = LiveStation.live.order(updated_at: :desc)
+
+    if live_stations.blank?
+      Turbo::StreamsChannel.broadcast_update_to(:live_stations, target: :live_stations_list, html: nil)
+    else
+      Turbo::StreamsChannel.broadcast_update_to(:live_stations,
+        target: :live_stations_list,
+        partial: "live_stations/live_stations",
+        locals: {user: current_user, live_stations: live_stations})
+    end
   end
 end
