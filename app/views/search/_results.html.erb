@@ -1,0 +1,41 @@
+<%= turbo_frame_tag :results do %>
+  <div class="flex flex-col p-4 items-center justify-center overflow-hidden"
+      data-search-target='results'>
+    <div class="flex flex-row mt-2 items-center justify-center text-lg">
+      <span class="opacity-75">Search results for: </span>
+      <span class="ml-2 font-bold"><%= params[:q] %></span>
+    </div>
+
+    <div class="mt-2 flex flex-row gap-x-2 w-full">
+      <span class='font-bold'>Artists</span>
+      <% unless artists.blank? %>
+        <span class="text-small opacity-75 text-gray-600">(<%= artists.size %>)</span>
+      <% else %>
+        <span class="text-small opacity-75 text-gray-600">None</span>
+      <% end %>
+    </div>
+    <%= render partial: 'search/items/artist', collection: artists unless artists.blank? %>
+
+    <div class="mt-2 flex flex-row gap-x-2 w-full">
+      <span class='font-bold'>Albums</span>
+      <% unless albums.blank? %>
+        <span class="text-small opacity-75 text-gray-600">(<%= albums.size %>)</span>
+      <% else  %>
+        <span class="text-small opacity-75 text-gray-600">None</span>
+      <% end %>
+    </div>
+    <%= render partial: 'search/items/album', collection: albums unless albums.blank? %>
+
+    <div class="mt-2 flex flex-row gap-x-2 w-full">
+      <span class='font-bold'>
+        Tracks
+      </span>
+      <% unless tracks.blank? %>
+        <span class="text-small opacity-75 text-gray-600">(<%= tracks.size %>)</span>
+      <% else  %>
+        <span class="text-small opacity-75 text-gray-600">None</span>
+      <% end %>
+    </div>
+    <%= render partial: 'search/items/track', collection: tracks unless tracks.blank? %>
+  </div>
+<% end %>

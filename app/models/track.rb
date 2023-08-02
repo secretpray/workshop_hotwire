@@ -14,7 +14,7 @@ class Track < ApplicationRecord
     Artist.decrement_counter(:tracks_count, album.artist_id) # rubocop:disable Rails/SkipsModelValidations
   end
 
-  scope :ordered, -> { order(position: :asc) }
+  scope :ordered, -> { order(:position) }
   scope :popularity_ordered, -> { order(listenings_count: :desc) }
   scope :search, ->(q) {
     where(arel_table[:title].lower.matches("%#{q.downcase}%"))
