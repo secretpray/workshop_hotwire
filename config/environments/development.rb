@@ -1,7 +1,13 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+  # Specify AnyCable WebSocket server URL to use by JS client
+  config.after_initialize do
+    config.action_cable.url = ActionCable.server.config.url = ENV.fetch("CABLE_URL", "ws://localhost:8080/cable") if AnyCable::Rails.enabled?
+  end
+
   config.action_mailer.default_url_options = {host: "localhost", port: 3000}
+  config.action_controller.default_url_options = {host: "localhost", port: 3000}
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded any time

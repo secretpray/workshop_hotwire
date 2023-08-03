@@ -31,33 +31,81 @@ class LiveStationsController < ApplicationController
   def start
     station = current_user.live_station
 
-    session[:track_id] = station.current_track&.id
-    session[:station_id] = station.id
-
     station.update!(live: true)
+    broadcast_update_live_stations
 
-    redirect_to station
+    render turbo_stream: [
+      turbo_stream.update("player", partial: "player/player", locals: {station:, track: station.current_track, live: true}),
+      turbo_stream.replace(dom_id(station, :info), partial: "info", locals: {station:})
+    ]
   end
 
   def stop
     station = current_user.live_station
 
-    session.delete(:track_id)
-    session.delete(:station_id)
     station.update!(live: false)
+    broadcast_update_live_stations
 
-    redirect_to station
+    Turbo::StreamsChannel.broadcast_update_to station, target: :player, content: ""
+
+    render turbo_stream: [
+      turbo_stream.update("player", inline: ""),
+      turbo_stream.update(dom_id(station, :queue), partial: "queue", locals: {station:}),
+      turbo_stream.replace(dom_id(station, :info), partial: "info", locals: {station:})
+    ]
+  end
+
+  def play_next
+    station = current_user.live_station
+
+    track = station.play_next
+
+    Turbo::StreamsChannel.broadcast_update_to station, target: :player, partial: "player/player", locals: {station:, track:}
+
+    render turbo_stream: [
+      turbo_stream.update("player", partial: "player/player", locals: {station:, track:, live: true}),
+      turbo_stream.update(dom_id(station, :queue), partial: "live_stations/queue", locals: {station:})
+    ]
   end
 
   def update
-    @station = current_user.live_station
-    @station.update!(station_params)
-    redirect_to @station
+    station = current_user.live_station
+    station.update!(station_params)
+
+    redirect_to live_station_path
+  end
+
+  def play
+    station = LiveStation.find(params[:id])
+
+    render turbo_stream: turbo_stream.update("player", partial: "player/player", locals: {station:, track: station.current_track})
+  end
+
+  def play_control
+    control_action = params[:control] == "play" ? :play : :pause
+    station = LiveStation.find(params[:id])
+
+    Turbo::StreamsChannel.broadcast_stream_to station, 
+      content: turbo_stream.set_attribute(".player", 
+        "data-player-control-action-value", control_action)
   end
 
   private
 
   def station_params
     params.require(:live_station).permit(:name, :cover)
+  end
+
+  def broadcast_update_live_stations
+    live_stations = LiveStation.live.order(updated_at: :desc)
+
+    if live_stations.blank?
+      Turbo::StreamsChannel.broadcast_update_to(:live_stations, target: :live_stations_list, html: nil)
+    else
+      Turbo::StreamsChannel.broadcast_update_to(:live_stations,
+        target: :live_stations_list,
+        partial: "live_stations/live_stations",
+        locals: {user: current_user, live_stations: live_stations})
+    end
   end
 end

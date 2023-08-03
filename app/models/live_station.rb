@@ -9,6 +9,8 @@ class LiveStation < ApplicationRecord
 
   def enqueue(track)
     with_lock do
+      # first, remove track if already present
+      tracks.delete(track)
       live_station_tracks.create!(track:, position: tracks.count)
     end
   end
@@ -19,7 +21,7 @@ class LiveStation < ApplicationRecord
       tracks.delete(track)
 
       # Re-order the tracks
-      live_station_tracks.order(position: :asc).each_with_index do |t, i|
+      live_station_tracks.order(:position).each_with_index do |t, i|
         t.update_column(:position, i + 1) # rubocop:disable Rails/SkipsModelValidations
       end
 
@@ -28,7 +30,8 @@ class LiveStation < ApplicationRecord
   end
 
   def play_next
-    live_station_tracks.order(position: :asc).first&.destroy
+    live_station_tracks.order(:position).first&.destroy
+    current_track
   end
 
   def current_track = tracks.first

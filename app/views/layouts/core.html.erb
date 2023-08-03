@@ -6,8 +6,11 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= action_cable_meta_tag %>
+    <meta name="action-cable-history-timestamp" content="<%= Time.now.to_i %>">
+    <%= turbo_boost.meta_tag %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <%= yield :head %>
   </head>
 
   <body class="min-h-screen relative">
