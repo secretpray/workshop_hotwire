@@ -1,4 +1,12 @@
 <%= turbo_frame_tag "tracks-page-#{@pagy.page}" do %>
-  <%= render @tracks, enqueueble: true %>
-  <%= render "artists/next_page" %>
+  <%= render partial: "tracks/track", 
+             collection: @tracks, 
+             as: :track,
+             locals: { enqueueble: true, 
+                       offset: @pagy.offset } %>
+  <% if @pagy.page >= @pagy.last %>
+    <%= link_to 'Return', artist_path(@artist), class: 'button button-primary mt-2 inline-block',  target: :_top %>
+  <% else %>
+    <%= render partial: "artists/next_page", locals: { pagy: @pagy} %>
+  <% end %>  
 <% end %>
