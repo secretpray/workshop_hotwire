@@ -1,12 +1,18 @@
-<%= turbo_frame_tag "tracks-page-#{@pagy.page}" do %>
+<%= turbo_frame_tag "tracks-page-#{pagy.page}" do %>
   <%= render partial: "tracks/track", 
-             collection: @tracks, 
+             collection: tracks, 
              as: :track,
              locals: { enqueueble: true, 
-                       offset: @pagy.offset } %>
-  <% if @pagy.page >= @pagy.last %>
-    <%= link_to 'Return', artist_path(@artist), class: 'button button-primary mt-2 inline-block',  target: :_top %>
+                       offset: pagy.offset } %>
+  <% if pagy.page >= pagy.last %>
+    <%= link_to 'Return', artist_path(artist), class: 'button button-primary mt-2 inline-block', target: :_top %>
   <% else %>
-    <%= render partial: "artists/next_page", locals: { pagy: @pagy} %>
+    <%= turbo_frame_tag "tracks-page-#{pagy.next}",
+                        loading: :lazy,
+                        src: pagy_url_for(pagy, pagy.next) do %>
+      <div class="">
+        Loading...
+      </div>
+    <% end %>
   <% end %>  
 <% end %>

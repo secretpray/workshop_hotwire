@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::Base
   include Pagy::Backend
-  include CurrentTrackHelper
-  helper_method :current_user, :current_track, :current_album, :current_station
+  helper_method :current_user
+  helper_method :current_track
+  helper_method :current_station
 
   private
 
@@ -15,10 +16,22 @@ class ApplicationController < ActionController::Base
     @current_user = User.find_by(id: cookies.signed[:user_id])
   end
 
-  # Define dynamic methods for current_track, current_album, current_station
-  %w[track album station].each do |item_type|
-    define_method "current_#{item_type}" do
-      current_item(item_type)
-    end
+  def current_track
+    return @current_track if instance_variable_defined?(:@current_track)
+
+    track_id = params[:track_id] || session[:track_id]
+    @current_track = track_id.present? ? Track.find_by(id: track_id) : nil
+    session[:track_id] = @current_track&.id
+    @current_track
+  end
+
+  def current_station
+    return @current_station if instance_variable_defined?(:@current_station)
+
+    station_id = params[:station_id] || session[:station_id]
+
+    @current_station = station_id.present? ? LiveStation.find_by(id: station_id) : nil
+    session[:station_id] = @current_station&.id
+    @current_station
   end
 end

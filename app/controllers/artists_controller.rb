@@ -18,7 +18,7 @@ class ArtistsController < ApplicationController
     tracks = artist.tracks.popularity_ordered
     @pagy, @tracks = pagy_countless(tracks)
 
-    render "scrollable_list"
+    render "scrollable_list", locals: {artist:, tracks: @tracks, pagy: @pagy}
   end
 
   def popular
